@@ -1,4 +1,4 @@
-# golearn
+# learning-go-by-writing-another-lisp
 
 Small Go playground for language/tooling experiments.
 
