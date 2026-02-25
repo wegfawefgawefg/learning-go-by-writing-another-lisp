@@ -1,5 +1,7 @@
 package lcom
 
+import "fmt"
+
 type ParseResult struct {
 	nextPosition int
 	node         Node
@@ -50,7 +52,7 @@ func parseExpression(tokens []Token, current int) (ParseResult, error) {
 	}
 	token = tokens[current+1]
 
-	for token.typ == "paren" || token.value == ")" {
+	for !(token.typ == "paren" && token.value == ")") {
 		// recursively call parseToken
 		result, err := parseToken(tokens, current)
 		if err != nil {
@@ -59,5 +61,29 @@ func parseExpression(tokens []Token, current int) (ParseResult, error) {
 		node.params = append(node.params, result.node)
 		current = result.nextPosition
 		token = tokens[current]
+	}
+
+	current++
+	return ParseResult{
+		nextPosition: current,
+		node:         node,
+	}, nil
+}
+
+func parseToken(tokens []Token, current int) (ParseResult, error) {
+	token := tokens[current]
+
+	switch token.typ {
+	case "number":
+		return parseNumber(tokens, current)
+	case "string":
+		return parseString(tokens, current)
+	case "paren":
+		if token.value == "(" {
+			return parseExpression(tokens, current)
+		}
+		fallthrough
+	default:
+		return ParseResult{}, fmt.Errorf("unknown token type: %s", token.typ)
 	}
 }

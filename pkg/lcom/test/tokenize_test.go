@@ -1,8 +1,9 @@
-package lcom
+package lcom_test
 
 import (
 	"reflect"
 	"testing"
+	"trying-mo/pkg/lcom"
 )
 
 func TestTokenizeCharacter(t *testing.T) {

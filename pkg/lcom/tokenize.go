@@ -24,7 +24,7 @@ func (t Token) String() string {
 	return fmt.Sprintf("type: %-10s, value: %s", t.typ, t.value)
 }
 
-func itsWhitespace(input string, current int) (MToken, error) {
+func ItsWhitespace(input string, current int) (MToken, error) {
 	char := string(input[current])
 
 	re, err := regexp.Compile(`\s`)
@@ -39,7 +39,7 @@ func itsWhitespace(input string, current int) (MToken, error) {
 	return MToken{consumedChars: 0}, nil
 }
 
-func tokenizeCharacter(typ string, value string, input string, current int) (MToken, error) {
+func TokenizeCharacter(typ string, value string, input string, current int) (MToken, error) {
 	// check if beyond the end of the input
 	if current >= len(input) {
 		return MToken{0, Token{}}, nil
@@ -54,15 +54,15 @@ func tokenizeCharacter(typ string, value string, input string, current int) (MTo
 	return MToken{0, Token{}}, nil
 }
 
-func tokenizeParenOpen(input string, current int) (MToken, error) {
-	return tokenizeCharacter("paren", "(", input, current)
+func TokenizeParenOpen(input string, current int) (MToken, error) {
+	return TokenizeCharacter("paren", "(", input, current)
 }
 
-func tokenizeParenClose(input string, current int) (MToken, error) {
-	return tokenizeCharacter("paren", ")", input, current)
+func TokenizeParenClose(input string, current int) (MToken, error) {
+	return TokenizeCharacter("paren", ")", input, current)
 }
 
-func tokenizePattern(typ string, pattern string, input string, current int) (MToken, error) {
+func TokenizePattern(typ string, pattern string, input string, current int) (MToken, error) {
 	// Check if beyond the end of the input
 	if current >= len(input) {
 		return MToken{0, Token{}}, nil
@@ -90,15 +90,15 @@ func tokenizePattern(typ string, pattern string, input string, current int) (MTo
 	return MToken{0, Token{}}, nil
 }
 
-func tokenizeNumber(input string, current int) (MToken, error) {
-	return tokenizePattern("number", "[0-9]", input, current)
+func TokenizeNumber(input string, current int) (MToken, error) {
+	return TokenizePattern("number", "[0-9]", input, current)
 }
 
-func tokenizeName(input string, current int) (MToken, error) {
-	return tokenizePattern("name", "[a-z]", input, current)
+func TokenizeName(input string, current int) (MToken, error) {
+	return TokenizePattern("name", "[a-z]", input, current)
 }
 
-func tokenizeString(input string, current int) (MToken, error) {
+func TokenizeString(input string, current int) (MToken, error) {
 	// Check if beyond the end of the input
 	if current >= len(input) {
 		return MToken{0, Token{}}, nil
@@ -128,12 +128,12 @@ func tokenizeString(input string, current int) (MToken, error) {
 
 func Tokenize(input string) ([]Token, error) {
 	tokenizers := []func(string, int) (MToken, error){
-		itsWhitespace,
-		tokenizeParenOpen,
-		tokenizeParenClose,
-		tokenizeNumber,
-		tokenizeName,
-		tokenizeString,
+		ItsWhitespace,
+		TokenizeParenOpen,
+		TokenizeParenClose,
+		TokenizeNumber,
+		TokenizeName,
+		TokenizeString,
 	}
 
 	current := 0
